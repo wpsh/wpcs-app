@@ -1,0 +1,25 @@
+{
+  "name": "wpsh/wpcs-checker",
+  "description": "A SaaS for checking your WordPress plugin or theme against WordPress coding standards.",
+  "type": "project",
+  "license": "MIT",
+  "authors": [{
+    "name": "Kaspars Dambis",
+    "email": "hi@kaspars.net"
+  }],
+  "autoload": {
+    "psr-4": {
+      "Preseto\\WPCSService\\": "src/"
+    }
+  },
+  "require": {
+    "wp-coding-standards/wpcs": "^2.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
+    "chumper/zipper": "^1.0"
+  },
+  "scripts": {
+    "serve": [
+      "php -S localhost:8000 -t public/"
+    ]
+  }
+}
