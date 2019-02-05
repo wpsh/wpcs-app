@@ -8,9 +8,6 @@ use \Psr\Http\Message\ResponseInterface as Response;
 require __DIR__ . '/vendor/autoload.php';
 
 $config = [
-	'standards' => [
-		'envato' => __DIR__ . '/phpcs-envato.xml',
-	],
 	'uploads_dir' => __DIR__ . '/uploads',
 	'mustache' => new \Mustache_Engine( [
 		'loader' => new \Mustache_Loader_FilesystemLoader( __DIR__ . '/views' ),
@@ -18,14 +15,22 @@ $config = [
 ];
 
 function process_asset( $asset ) {
-	// Setup the phpcs validator.
-	$validator = new Validator(
-		__DIR__ . '/vendor/bin/phpcs',
-		$asset->destination()
-	);
+	$report_file = sprintf( '%s/%s.json', __DIR__ . '/reports', $asset->id() );
 
-	// Run the coding standard checks.
-	$phpcs_report = $validator->run( $config['standards']['envato'] );
+	if ( file_exists( $report_file ) ) {
+		$phpcs_report = json_decode( file_get_contents( $report_file ) );
+	} else {
+		// Setup the phpcs validator.
+		$validator = new Validator(
+			__DIR__ . '/vendor/bin/phpcs',
+			$asset->destination()
+		);
+
+		// Run the coding standard checks.
+		$phpcs_report = $validator->run( __DIR__ . '/phpcs-envato.xml' );
+
+		file_put_contents( $report_file, json_encode( $phpcs_report ) );
+	}
 
 	// Format the report.
 	return new Formatter( $phpcs_report, $asset->destination() );
