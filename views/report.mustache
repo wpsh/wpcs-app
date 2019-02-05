@@ -1,0 +1,41 @@
+{{> header }}
+
+{{# error }}
+<p>
+	Error: {{ error }}
+</p>
+{{/ error }}
+
+<h1>Report #{{ hash }}</h1>
+
+{{# report }}
+<ul>
+	<li>Errors: {{ totals.errors }}</li>
+	<li>Warnings: {{ totals.warnings }}</li>
+	<li>Fixable: {{ totals.fixable }}</li>
+</ul>
+{{/ report }}
+
+<h2>File Report</h2>
+
+{{# report.files }}
+<h3>File: {{ file }}</h3>
+<ul>
+	{{# messages }}
+	<li>
+		<h4>{{ message }}</h4>
+		<p>
+			Line: {{ line }}, column: {{ column }}), rule: <code>{{ source }}</code>:
+		</p>
+		<pre><code>{{ snippet }}</code></pre>
+	</li>
+	{{/ messages }}
+	{{^ messages }}
+	<li>
+		No errors or warnings found.
+	</li>
+	{{/ messages }}
+</ul>
+{{/ report.files }}
+
+{{> footer }}

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <ruleset name="Minimal Coding Standards">
 	<arg name="report" value="code" />
+	<arg name="extensions" value="php" />
 
 	<rule ref="WordPress-Core">
 		<exclude name="Squiz.Commenting" />
@@ -10,5 +11,13 @@
 		<exclude name="WordPress.Arrays.ArrayIndentation" />
 		<exclude name="Squiz.WhiteSpace.SuperfluousWhitespace" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
+		<exclude name="Generic.WhiteSpace.DisallowSpaceIndent" />
+		<exclude name="PEAR.NamingConventions.ValidClassName" />
+		<exclude name="Generic.Formatting.MultipleStatementAlignment" />
+		<exclude name="Generic.ControlStructures.InlineControlStructure" />
+		<exclude name="WordPress.Arrays.ArrayKeySpacingRestrictions" />
+		<exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />
+		<exclude name="Squiz.ControlStructures.ControlSignature" />
+		<exclude name="Squiz.PHP.DisallowMultipleAssignments" />
 	</rule>
 </ruleset>

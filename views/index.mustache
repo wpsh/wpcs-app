@@ -1,0 +1,16 @@
+{{> header}}
+
+<h1>Upload Your WordPress Theme or Plugin</h1>
+
+{{# error }}
+<p>
+	{{ error }}
+</p>
+{{/ error }}
+
+<form action="/submit" method="post" enctype="multipart/form-data">
+	<input type="file" name="assetzip">
+	<input type="submit" value="Upload">
+</form>
+
+{{> footer}}

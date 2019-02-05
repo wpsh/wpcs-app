@@ -15,7 +15,9 @@
   "require": {
     "wp-coding-standards/wpcs": "^2.0",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
-    "chumper/zipper": "^1.0"
+    "chumper/zipper": "^1.0",
+    "mustache/mustache": "^2.12",
+    "slim/slim": "^3.12"
   },
   "scripts": {
     "serve": [

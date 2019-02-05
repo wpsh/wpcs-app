@@ -6,17 +6,30 @@ use Chumper\Zipper\Zipper;
 
 class Asset {
 
+	protected $id;
+
 	protected $file;
 
 	protected $dir;
 
-	function __construct( $file, $dir ) {
-		$this->file = $file;
+	function __construct( $file, $dir, $id = null ) {
 		$this->dir = $dir;
+		$this->id = $id;
+		$this->file = array_merge(
+			$file,
+			[
+				'name' => null,
+				'tmp_name' => null,
+			]
+		);
 	}
 
 	public function id() {
-		return $this->hash();
+		if ( ! isset( $this->id ) ) {
+			$this->id = $this->hash();
+		}
+
+		return $this->id;
 	}
 
 	public function basename() {
@@ -48,10 +61,6 @@ class Asset {
 	}
 
 	public function unarchive() {
-		if ( ! $this->valid() ) {
-			throw new \Exception( 'Please supply a zip archive.' );
-		}
-
 		// Unzip only if not done already.
 		if ( ! file_exists( $this->destination() ) ) {
 			$zipper = new Zipper();
