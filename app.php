@@ -7,16 +7,14 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$mustache = new \Mustache_Engine( [
-	'loader' => new \Mustache_Loader_FilesystemLoader( __DIR__ . '/views' ),
-] );
-
 $config = [
 	'standards' => [
 		'envato' => __DIR__ . '/phpcs-envato.xml',
 	],
 	'uploads_dir' => __DIR__ . '/uploads',
-	'mustache' => $mustache,
+	'mustache' => new \Mustache_Engine( [
+		'loader' => new \Mustache_Loader_FilesystemLoader( __DIR__ . '/views' ),
+	] ),
 ];
 
 function process_asset( $asset ) {
@@ -30,7 +28,7 @@ function process_asset( $asset ) {
 	$phpcs_report = $validator->run( $config['standards']['envato'] );
 
 	// Format the report.
-	return new Formatter( $phpcs_report, $config['uploads_dir'] . '/' . $asset->id() . '/' );
+	return new Formatter( $phpcs_report, $asset->destination() );
 }
 
 $app = new \Slim\App;
