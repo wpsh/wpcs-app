@@ -23,7 +23,7 @@ function process_asset( $asset ) {
 	// Setup the phpcs validator.
 	$validator = new Validator(
 		__DIR__ . '/vendor/bin/phpcs',
-		$asset->unarchive()
+		$asset->destination()
 	);
 
 	// Run the coding standard checks.
@@ -61,14 +61,35 @@ $app->get( '/report/{id:[a-z0-9]+}', function ( Request $request, Response $resp
 });
 
 $app->post( '/submit', function ( Request $request, Response $response, array $args ) use ( $config ) {
-	$input = 'assetzip';
-	$name = $args['id'];
-	$response->getBody()->write("Hello, $name");
+	$uploadedFiles = $request->getUploadedFiles();
 
-	$asset = new Asset(
-		$_FILES[ $input ],
-		$uploads_dir
-	);
+	$template = $config['mustache']->loadTemplate( 'report' );
+
+	if ( ! empty( $uploadedFiles['assetzip'] ) ) {
+		try {
+			$asset = new Asset( $uploadedFiles['assetzip']->file, $config['uploads_dir'] );
+			$asset->unarchive();
+
+			return $response->withRedirect( 'report/' . $asset->id(), 302 );
+		} catch (\Exception $e) {
+			$output = $template->render( [
+				'error' => $e->getMessage(),
+			] );
+		}
+	} else {
+		$output = $template->render( [
+			'error' => 'Missing upload file.',
+		] );
+	}
+
+	$response->getBody()->write( $output );
+
+	return $response;
+});
+
+$app->get( '/', function ( Request $request, Response $response, array $args ) use ( $config ) {
+	$template = $config['mustache']->loadTemplate( 'index' );
+	$response->getBody()->write( $template->render() );
 
 	return $response;
 });

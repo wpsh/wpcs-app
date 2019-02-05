@@ -10,18 +10,12 @@ class Asset {
 
 	protected $file;
 
-	protected $dir;
+	protected $to;
 
-	function __construct( $file, $dir, $id = null ) {
-		$this->dir = $dir;
+	function __construct( $file, $to, $id = null ) {
+		$this->to = $to;
+		$this->file = $file;
 		$this->id = $id;
-		$this->file = array_merge(
-			$file,
-			[
-				'name' => null,
-				'tmp_name' => null,
-			]
-		);
 	}
 
 	public function id() {
@@ -32,30 +26,14 @@ class Asset {
 		return $this->id;
 	}
 
-	public function basename() {
-		return basename( $this->file['name'] );
-	}
-
-	public function filename() {
-		return $this->file['tmp_name'];
-	}
-
 	protected function hash() {
-		return md5_file( $this->file['tmp_name'] );
-	}
-
-	public function extension() {
-		return strtolower( pathinfo( $this->basename(), PATHINFO_EXTENSION ) );
-	}
-
-	public function valid() {
-		return ( 'zip' === $this->extension() );
+		return md5_file( $this->file );
 	}
 
 	public function destination() {
 		return sprintf(
 			'%s/%s',
-			rtrim( $this->dir, '/' ),
+			rtrim( $this->to, '/' ),
 			$this->id()
 		);
 	}
@@ -64,7 +42,7 @@ class Asset {
 		// Unzip only if not done already.
 		if ( ! file_exists( $this->destination() ) ) {
 			$zipper = new Zipper();
-			$zipper->make( $this->filename() )->extractTo( $this->destination() );
+			$zipper->make( $this->file )->extractTo( $this->destination() );
 			$zipper->close();
 		}
 
